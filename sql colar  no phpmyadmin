@@ -1,0 +1,48 @@
+-- Criação do banco de dados
+CREATE DATABASE IF NOT EXISTS reservas_sistema;
+USE reservas_sistema;
+
+-- Tabela de usuários
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'user') DEFAULT 'user' NOT NULL
+);
+
+-- Tabela de salas
+CREATE TABLE rooms (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT
+);
+
+-- Tabela de reservas
+CREATE TABLE bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    room_id INT NOT NULL,
+    data DATE NOT NULL,
+    horario_inicio TIME NOT NULL,
+    horario_fim TIME NOT NULL,
+    status ENUM('ativo', 'cancelado') DEFAULT 'ativo' NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
+);
+
+-- Tabela de conexão de banco de dados
+-- Esse trecho assume que o arquivo db_connection.php já está configurado corretamente com os detalhes do banco de dados.
+
+-- Inserções exemplo (opcional)
+-- Exemplo de inserção de um usuário admin
+INSERT INTO users (nome, email, senha, role) 
+VALUES ('Administrador', 'admin@exemplo.com', 'senhaSegura', 'admin');
+
+-- Exemplo de inserção de uma sala
+INSERT INTO rooms (nome, descricao) 
+VALUES ('Sala de Reunião 1', 'Sala para reuniões pequenas.');
+
+-- Exemplo de inserção de uma reserva
+INSERT INTO bookings (user_id, room_id, data, horario_inicio, horario_fim) 
+VALUES (1, 1, '2024-10-25', '10:00:00', '12:00:00');
